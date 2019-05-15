@@ -41,4 +41,27 @@ router.post('/join', async (req, res, next) => {
 	}
 });
 
+// 로그인
+router.post('/login', async (req, res, next) => {
+	const { email, password } = req.body;
+	try {
+		const exUser = await User.findOne({
+			where: { email: email },
+		});
+		if (!exUser) {
+			res.send('error01');
+		} else {
+			const match = await bcrypt.compare(password, exUser.password);
+			if (match) {
+				res.send('ok');
+			} else {
+				res.send('error02');
+			}
+		}
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
 module.exports = router;
