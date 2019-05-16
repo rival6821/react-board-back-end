@@ -53,6 +53,8 @@ router.post('/login', async (req, res, next) => {
 		} else {
 			const match = await bcrypt.compare(password, exUser.password);
 			if (match) {
+				let sess = req.session;
+				sess.email = email;
 				res.send('ok');
 			} else {
 				res.send('error02');
